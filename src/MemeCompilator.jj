@@ -1,0 +1,390 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = true;}PARSER_BEGIN(MemeCompilator)
+public class MemeCompilator{  public static void main(String args []) throws ParseException  {    MemeCompilator parser = new MemeCompilator(System.in); System.out.println("Escreva seu programa: ");
+      try
+      {
+        switch (MemeCompilator.uma_linha())
+        {
+          case 0 : 
+          System.out.println("OK.");
+          break;
+          case 1 : 
+          System.out.println("Goodbye.");
+          break;
+          default : 
+          break;
+        }
+      }
+      catch (Exception e)
+      {
+        System.out.println("NOK.");
+        System.out.println(e.getMessage());
+        MemeCompilator.ReInit(System.in);
+      }
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      
+      }  }}PARSER_END(MemeCompilator)SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+}
+
+
+TOKEN : /*PALAVRAS RESERVADAS*/
+{
+	< 	PARA    	:  	"nala"     		>
+| 	< 	PARACADA	:	"alna"			>
+| 	< 	DENTRO		:	"in"			>
+|	< 	SE      	:  	"wity" 			> /*WHAT IF I TOLD YOU*/
+|	<	 SENAO   	:  	"capaz_wity"   	>
+|	<	RETORNO		: 	"volta_caralho"	>
+|	< 	FUNCAO		:	" FUNCTION "	>
+|	<	MOSTRAR		:  	"ehoradoshow"	>
+| 	<  	ASPAS		:	"'" 			>
+}
+
+
+TOKEN : /* LIMITADORES */
+{
+	<	PARENTESE_DIREITO		:	")"						>
+|	<	PARENTESE_ESQUERDO		:	"("						>
+|	<	CHAVE_DIREITA			:	"}"						>
+|	<	CHAVE_ESQUERDA			:	"{"						>
+|	<	VIRGULA					:	","						>
+|	<	FIMLINHA				:	"moro"					>
+| 	< 	INICIOPROGRAMA			:	"OLA_MARILENE" >
+|	<	FIMPROGRAMA				:	"E_SOH"					>
+
+}
+
+TOKEN : /* TIPOS PRIMITIVOS	*/
+{
+	<	INTEIRO			:	"noite"		>
+|	<	REAL			:	"tainha"	>
+|	<	BOOLEAN			:	"vinho"		>
+|	<	TEXTO			:	"muito_sexo"	>
+}
+
+TOKEN : /* OPERADORES */
+{
+	<	MAIOR		:	">"				>
+|	<	MENOR		:	"<"				>
+|	<	MENOR_IGUAL	:	"<="			>
+|	<	MAIOR_IGUAL	: 	">="			>
+|	<	IGUAL		:	"suvacoaxila"	>
+|	<	NEGAÇÃO		:	"capaz"			>
+|	<	ATRIBUICAO	:	"tomale"		>
+| 	< 	AND			:	"and"			>
+| 	< 	OR			:	"or"			>
+| 	< 	INC			:	"++"			>
+| 	< 	DECRE		:	"--"			>	
+}
+
+TOKEN :/* UNIDADES */
+{
+  < CONSTANTE 	 		:	(< DIGITO >)+ 	>
+| < #DIGITO   	 	 	: 	[ "0"-"9" ]		>
+| < LETRA    	 	 	: 	["A"-"z"  ] 	>
+| < IDENTIFICADOR 		: 	(< LETRA >)+  	>
+}
+
+int uma_linha() :{ }
+{
+  	camila_filha_da_pulta() { return 0;}
+}
+
+
+void camila_filha_da_pulta() :
+{}
+{
+	< INICIOPROGRAMA >
+		corpo()
+	 <FIMPROGRAMA> 
+}
+
+void corpo(): { }
+{
+	( (declaracoes())+ comando() | comando() )
+}
+
+void declaracoes() : { }
+{
+	tipoDado() (declaracaoVariavel() | declaracaoFuncao())
+}
+void declaracaoVariavel () :
+{}
+{
+	 <IDENTIFICADOR > <FIMLINHA >
+}
+
+void tipoDado(): { }
+{
+	(< INTEIRO > | < REAL > | < BOOLEAN > | < TEXTO >)
+}
+
+void declaracaoFuncao():
+{}
+{
+try
+{
+  < FUNCAO > < IDENTIFICADOR > <PARENTESE_ESQUERDO> ((tipoDado() < IDENTIFICADOR > (< VIRGULA > tipoDado() < IDENTIFICADOR > )* )*) < PARENTESE_DIREITO> <CHAVE_ESQUERDA> comando() <CHAVE_DIREITA>
+}
+      catch (Error e)
+      {
+        System.out.println("Função.");
+        System.out.println(e.getMessage());
+      }
+}
+
+
+void comando():
+{}
+{
+	condicional() | < IDENTIFICADOR > (atribuicao() |chamadaFuncao() ) | print()   	
+}
+
+void atribuicao():
+{}
+{
+try
+{
+  < ATRIBUICAO > (< IDENTIFICADOR > fim_linha() | < CONSTANTE > fim_linha())
+} catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+}
+/*
+void loop():
+{}
+{
+try
+{
+	< PARACADA > parentese_esquerdo() < IDENTIFICADOR > < DENTRO > < IDENTIFICADOR > parentese_direito() chave_esquerda() (comando()) chave_direita()
+| < PARA > parentese_esquerdo() (< IDENTIFICADOR > | declaracaoVariavel()) < VIRGULA > expressao() < VIRGULA > passo() parentese_direito() chave_esquerda() (comando()) chave_direita()
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+}
+*/
+void condicional():
+{}
+{
+try
+{
+ < SE > parentese_esquerdo() expressao() parentese_direito() chave_esquerda() (comando()) chave_direita() condicionalnegada()
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+}
+
+void condicionalnegada():
+{}
+{
+try
+{
+  < SENAO > chave_esquerda() (comando()) chave_direita() 
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+}
+
+void expressao():
+{}
+{
+try
+{
+	< IDENTIFICADOR > comparacao() < IDENTIFICADOR >
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+}
+
+void comparacao():
+{}
+{
+try
+{
+	<	MAIOR >
+|	<	MENOR	>
+|	<	MENOR_IGUAL	>
+|	<	MAIOR_IGUAL >
+|	<	IGUAL	>
+|	<	NEGAÇÃO > <	IGUAL	>
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+}
+
+void fim_linha():
+{}
+{
+try
+{
+	< FIMLINHA >
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+}
+
+void chave_esquerda():
+{}
+{
+try
+{
+	< CHAVE_ESQUERDA >
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+
+}
+
+void chave_direita():
+{}
+{
+try
+{
+	< CHAVE_DIREITA >
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+
+	
+}
+
+void parentese_esquerdo():
+{}
+{
+try
+{
+	< PARENTESE_ESQUERDO >
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+
+}
+
+void parentese_direito():
+{}
+{
+	try
+{
+	< PARENTESE_DIREITO >
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+
+
+}
+
+void passo():
+{}
+{
+try
+{
+	< IDENTIFICADOR > (< INC > |  < DECRE >)
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+
+}
+
+void texto():
+{}
+{
+try
+{
+	aspas() < IDENTIFICADOR > aspas()
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+}
+
+void aspas():
+{}
+{
+try
+{
+	< ASPAS >
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+}
+
+void print():
+{}
+{
+try
+{
+ < MOSTRAR > parentese_esquerdo() texto() parentese_direito() fim_linha() 
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+}
+
+void chamadaFuncao():
+{}
+{
+try
+{
+	parentese_esquerdo() ( ((< IDENTIFICADOR > (< VIRGULA > < IDENTIFICADOR > )* )*) ) parentese_direito() fim_linha()
+}
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+       
+      }
+	
+}
+
+
